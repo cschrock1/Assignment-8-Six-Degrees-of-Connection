@@ -15,6 +15,28 @@ from collections import deque
 # ============================================================================
 
 def bfs(graph, start, target):
+    visited = {start}
+    queue = deque([start])
+    parent = {start: None}  # FIX: initialize parent
+
+    while queue:
+        current = queue.popleft()
+
+        if current == target:
+            # Reconstruct path
+            path = []
+            while current is not None:
+                path.append(current)
+                current = parent[current]
+            return path[::-1]
+
+        for neighbor in graph[current]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+                parent[neighbor] = current
+
+    return []  # no path found
     """
     Find shortest path between two users using breadth-first search.
     
@@ -46,6 +68,20 @@ def bfs(graph, start, target):
 # ============================================================================
 
 def dfs(graph, start):
+    visited = set()
+    stack = [start]
+
+    while stack:
+        current = stack.pop()
+
+        if current not in visited:
+            visited.add(current)
+
+            for neighbor in graph[current]:
+                if neighbor not in visited:
+                    stack.append(neighbor)
+
+    return visited
     """
     Find all users reachable from a starting user using depth-first search.
     
